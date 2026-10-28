@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    image: wind-forecast-monitor
+    ports:
+      - "8000:8000"
+    environment:
+      # "snapshot" serves the bundled January 2026 data; "elexon" re-fetches it live on startup.
+      DATA_SOURCE: snapshot
+    restart: unless-stopped

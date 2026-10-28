@@ -1,0 +1,14 @@
+# Keep the build context small and free of local artefacts
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.ruff_cache
+.git
+.github
+.vercel
+docs
+backend/tests
+*.md

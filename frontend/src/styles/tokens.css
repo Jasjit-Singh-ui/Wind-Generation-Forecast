@@ -1,0 +1,48 @@
+/* Design tokens: a single dark theme.
+   Series colours are validated (lightness band, chroma, colour-vision separation and contrast
+   on the card surface) and keep one meaning everywhere:
+   official forecast = blue, error-adjusted forecast = orange, metered outturn = green.
+   The lighter "text" tints are only used for numbers set next to a label or column header. */
+
+:root {
+  color-scheme: dark;
+  --font-sans: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --radius: 16px;
+  --radius-sm: 10px;
+
+  --bg: #070a10;
+  --surface: #0c111b;
+  --surface-2: #111724;
+  --surface-3: #171f2d;
+  --line: rgba(148, 163, 184, 0.12);
+  --line-strong: rgba(148, 163, 184, 0.24);
+  --grid: rgba(148, 163, 184, 0.08);
+  --axis: rgba(148, 163, 184, 0.2);
+
+  --text: #eef2f8;
+  --text-2: #a9b2c1;
+  --text-3: #6f798a;
+  --invert-bg: #e6edf7;
+  --invert-text: #0a0e15;
+  --accent: #4c9bff;
+  --focus: #6aaaff;
+
+  --series-official: #418ff7;
+  --series-adjusted: #e8691f;
+  --series-actual: #1fae6e;
+  --series-muted: #5f6878;
+  --text-official: #8ebcff;
+  --text-adjusted: #ffa66b;
+  --text-actual: #63dca0;
+  --text-negative: #ff8a78;
+
+  --band-opacity: 0.2;
+
+  /* Ordinal blue ramp for older forecast runs (oldest -> newest = official blue). */
+  --vintage-1: #184f95;
+  --vintage-2: #1c5cab;
+  --vintage-3: #256abf;
+  --vintage-4: #2a78d6;
+  --vintage-5: #418ff7;
+}
