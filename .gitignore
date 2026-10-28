@@ -10,8 +10,9 @@ node_modules/
 dist/
 *.tsbuildinfo
 
-# Deploy tooling
+# Deploy tooling and local secrets
 .vercel/
+.env*
 
 # OS / editor
 .DS_Store

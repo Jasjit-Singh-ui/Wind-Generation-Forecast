@@ -1,0 +1,25 @@
+# Deployment manifest for Vercel's Python runtime (FastAPI preset).
+# Vercel installs these dependencies and loads the FastAPI `app` below; Docker and local
+# development use backend/requirements.txt, which must pin the same versions (a backend
+# test checks that they match).
+
+[project]
+name = "wind-generation-forecast"
+version = "1.0.0"
+description = "UK wind generation forecast accuracy portal"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi==0.162.0",
+  "uvicorn[standard]==0.54.0",
+  "pandas==3.1.0",
+  "numpy==2.5.4",
+  "httpx==0.28.1",
+]
+
+[tool.vercel]
+entrypoint = "backend.app.main:app"
+
+# Serve the React build (registered with app.frontend) from the CDN; the app's middleware
+# only concerns /api responses.
+[tool.vercel.fastapi.static]
+cdn = true

@@ -9,7 +9,7 @@ Scope, as briefed: purchase decisions made in **January 2026**, using only Elexo
 
 | | |
 |---|---|
-| **Live app** | _add the deployment URL here_ |
+| **Live app** | **https://wind-generation-forecast.vercel.app** |
 | **Video walkthrough** | _add the unlisted YouTube link here_ |
 | **Stack** | React 19 + TypeScript (Vite, Recharts) · Python 3.12 + FastAPI + pandas · Docker |
 
@@ -65,7 +65,7 @@ npm run dev
 ### Checks
 
 ```bash
-cd backend  && ruff check . && ruff format --check . && pytest                  # 44 tests
+cd backend  && ruff check . && ruff format --check . && pytest                  # 45 tests
 cd frontend && npm run lint && npm run typecheck && npm test && npm run build  # 24 tests
 ```
 
@@ -116,9 +116,8 @@ Set `DATA_SOURCE=elexon` to have the API fetch the same window live at startup i
 │   ├── index.html
 │   ├── vite.config.ts           Dev proxy to the API, Vitest config
 │   └── package.json
-├── api/index.py                 Vercel serverless entry point (wraps the FastAPI app)
-├── vercel.json                  Vercel build and routing: static frontend + Python function for /api
-├── requirements.txt             Python dependencies for Vercel (points at backend/requirements.txt)
+├── pyproject.toml               Vercel manifest: pinned Python dependencies + FastAPI entrypoint
+├── vercel.json                  Vercel build command and function settings
 ├── Dockerfile                   Multi-stage build: Node builds the UI, Python serves API + UI
 ├── docker-compose.yml           `docker compose up` for local use
 ├── heroku.yml                   Heroku container deploy (alternative to Vercel)
@@ -171,7 +170,11 @@ The in-app **Methodology** tab has the full version.
 
 ## Deployment
 
-- **Vercel (current).** `vercel.json` builds the frontend into static files and deploys `api/index.py` as a Python function serving `/api/*`. The data snapshot is bundled with the function. Deploy from the CLI (`vercel --prod`) or by importing the GitHub repo.
+- **Vercel (live at https://wind-generation-forecast.vercel.app).** This uses Vercel's FastAPI runtime:
+  - The root `pyproject.toml` pins the Python dependencies and points Vercel at `backend.app.main:app`. A backend test keeps those pins identical to `backend/requirements.txt`.
+  - The build command in `vercel.json` builds the React app.
+  - FastAPI registers the built app with `app.frontend()`, and Vercel promotes those files to its CDN. Every `/api/*` request reaches the function, with the data snapshot bundled.
+  - To deploy, run `vercel deploy --prod` from the repo root.
 - **Heroku (alternative, uses the Dockerfile).** Run `heroku create`, then `heroku stack:set container`, then `git push heroku main`. The container listens on `$PORT`.
 - **Anywhere else that runs containers.** `docker build -t wind-forecast-monitor . && docker run -p 8000:8000 wind-forecast-monitor`.
 

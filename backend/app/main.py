@@ -4,12 +4,9 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.staticfiles import StaticFiles
-from starlette.exceptions import HTTPException as StarletteHTTPException
-from starlette.types import Scope
 
 from . import settings
 from .api import router
@@ -20,18 +17,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 # (but never the health check, which must reflect the live process).
 API_CACHE_CONTROL = "public, max-age=600, s-maxage=86400, stale-while-revalidate=86400"
 UNCACHED_PATHS = {"/api/health"}
-
-
-class SinglePageApp(StaticFiles):
-    """Static files with an ``index.html`` fallback so client-side routes deep-link correctly."""
-
-    async def get_response(self, path: str, scope: Scope) -> Response:
-        try:
-            return await super().get_response(path, scope)
-        except StarletteHTTPException as exc:
-            if exc.status_code != 404 or path.startswith("api"):
-                raise
-            return await super().get_response("index.html", scope)
 
 
 def create_app() -> FastAPI:
@@ -55,8 +40,10 @@ def create_app() -> FastAPI:
         return response
 
     app.include_router(router)
+    # The React build: API routes always take priority, other navigations fall back to
+    # index.html. On Vercel these files are promoted to the CDN at build time.
     if (settings.STATIC_DIR / "index.html").exists():
-        app.mount("/", SinglePageApp(directory=settings.STATIC_DIR, html=True), name="spa")
+        app.frontend("/", directory=settings.STATIC_DIR, fallback="index.html")
     return app
 
 

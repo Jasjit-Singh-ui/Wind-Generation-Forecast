@@ -1,14 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm ci --prefix frontend --no-audit --no-fund",
-  "buildCommand": "npm run build --prefix frontend",
-  "outputDirectory": "frontend/dist",
+  "buildCommand": "npm ci --prefix frontend --no-audit --no-fund && npm run build --prefix frontend",
   "functions": {
-    "api/index.py": {
+    "backend/app/main.py": {
       "maxDuration": 30,
-      "includeFiles": "backend/{app,data}/**",
-      "excludeFiles": "{frontend,docs,.github,backend/tests,backend/.venv}/**"
+      "excludeFiles": "{frontend/node_modules/**,frontend/src/**,docs/**,.github/**,backend/tests/**,**/__pycache__/**}"
     }
-  },
-  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/index" }]
+  }
 }
